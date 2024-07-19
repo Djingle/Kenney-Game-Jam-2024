@@ -231,12 +231,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    public enum BrobotType
-    {
-        yellow,
-	    green,
-	    blue,
-	    red
-    }
+    //public enum BrobotType
+    //{
+    //    yellow,
+	   // green,
+	   // blue,
+	   // red
+    //}
 
 }

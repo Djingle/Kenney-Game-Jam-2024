@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Factory : MonoBehaviour
@@ -25,16 +26,15 @@ public class Factory : MonoBehaviour
         }
     }
 
-    
-
-    public void SpawnPairOfBots(float centerX, float xOffset, float speed)
+    public IEnumerator SpawnPairOfBots(float timeToWait, float centerX, float xOffset, float speed)
     {
+        yield return new WaitForSeconds(timeToWait);
         float yOffset = -.26f;
         SpawnBot(new Vector3(centerX - xOffset, yOffset, 0), true, speed);
         SpawnBot(new Vector3(centerX + xOffset, yOffset, 0), false, speed);
     }
 
-    public void SpawnBot(Vector3 position, bool direction, float speed) // Should return a Brobot
+    public Brobot SpawnBot(Vector3 position, bool direction, float speed) // Should return a Brobot
     {
         int spawnType = Random.Range(0, 4);
         GameObject botPrefab;
@@ -51,8 +51,8 @@ public class Factory : MonoBehaviour
                 botPrefab = m_GreyBotPrefab; break;
         }
         GameObject instance = Instantiate(botPrefab, position, Quaternion.identity);
-        // Brobot brobot = instance.GetComponent<Brobot>();
-        // brobot.Init(direction, speed);
-        // return brobot;
+        Brobot brobot = instance.GetComponent<Brobot>();
+        brobot.Init(direction, speed);
+        return brobot;
     }
 }
