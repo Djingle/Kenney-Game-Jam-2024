@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     // The event called each time GameManager.Instance.ChangeState is called. Any script that cares about a change of state should listen to this event
     public static event Action<GameState> StateChanged;
 
+    public static int playerScore;
+
     private void Awake()
     {
         // Keep the GameManager when loading new scenes
