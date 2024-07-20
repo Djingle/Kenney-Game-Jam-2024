@@ -14,6 +14,7 @@ public class Factory : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
         // Singleton checks
         if (Instance == null) { // If there is no instance of Factory yet, then this one becomes the only instance
             Instance = this;

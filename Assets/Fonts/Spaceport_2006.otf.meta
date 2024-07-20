@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0f5c9848a23acbd43a87a34b63a8764f
+guid: b646ffbb2a342434a994b3efc1d125d4
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Kenney Mini Square Mono
+  - Spaceport 2006
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

@@ -166,6 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63db4b163a3ed784bb7da573fa710dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_MainMenu: {fileID: 6120740167002946787, guid: 4172db6684414294ea621319d29e3e0d, type: 3}
+  m_cheatMode: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

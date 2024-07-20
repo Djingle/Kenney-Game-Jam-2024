@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cdd3c78e5e82db74cb7ca781009ee498
+guid: 3c592d33938d20a42a97624a187a7024
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Kenney Mini Square
+  - Tibitto
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

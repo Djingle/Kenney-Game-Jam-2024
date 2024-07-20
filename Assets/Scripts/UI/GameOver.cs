@@ -26,10 +26,11 @@ public class GameOver : MonoBehaviour
         playerScoreText.color = Color.white;
     }
 
-    public void PressRestartButton()
-    {
-        GameManager.Instance.ChangeState(GameState.Playing);
-    }
+    //public void PressRestartButton()
+    //{
+    //    SceneManager.LoadScene("Game");
+    //    GameManager.Instance.ChangeState(GameState.Playing);
+    //}
 
     public void PressQuitButton()
     {

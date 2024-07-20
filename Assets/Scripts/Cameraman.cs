@@ -28,7 +28,7 @@ public class Cameraman : MonoBehaviour
         }
 
         BrobotEvents.SuccessfulDap += (b) => ChangeTarget(b);
-        FactoryEvents.SpawnedInitialBrobot += (b) => ChangeTarget(b);
+        GameManagerEvents.StateChanged += OnStateChanged;
     }
 
     private void ChangeTarget(Brobot brobot)
@@ -54,7 +54,7 @@ public class Cameraman : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!GameManager.Instance.PlayerBrobot) return;
+        if (GameManager.Instance.State != GameState.Playing) return;
         if (m_TransitionCoroutine == null) {
             float targetX = Target.position.x + m_XOffset;
             transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
@@ -66,5 +66,10 @@ public class Cameraman : MonoBehaviour
         valueInPixels = Mathf.Round(valueInPixels);
         float roundedUnityUnits = valueInPixels * (1 / m_PixelToUnits);
         return roundedUnityUnits;
+    }
+
+    private void OnStateChanged(GameState state)
+    {
+        if (state == GameState.Playing) ChangeTarget(GameManager.Instance.PlayerBrobot);
     }
 }

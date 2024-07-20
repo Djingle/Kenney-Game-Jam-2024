@@ -7,6 +7,6 @@ public class CreditsMenu : MonoBehaviour
 {
     public void PressBackButton()
     {
-        SceneManager.LoadScene("Menu");
+        GameManager.Instance.ChangeState(GameState.Menu);
     }
 }

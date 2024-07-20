@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameState State { get; private set; }
     public Brobot PlayerBrobot { get; private set; }
     public bool EasyMode { get; set; } = false;
+    public GameObject m_MainMenuPrefab;
+    public GameObject m_MainMenu;
 
     private Text playerScoreText;
 
@@ -34,7 +37,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        FactoryEvents.SpawnedPair += OnSpawnedPair;
+        FactoryEvents.SpawnedBot += OnSpawnedBot;
         BrobotEvents.SuccessfulDap += (b) => ChangePlayerBrobot(b);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -51,10 +54,14 @@ public class GameManager : MonoBehaviour
         // Run some code depending on the new state
         switch (newState) {
             case GameState.Playing:
-                SceneManager.LoadScene("Game");
+                if (PlayerBrobot == null) PlayerBrobot = Factory.Instance.SpawnBot(new Vector3(-15, 0,0), true, m_Speed);
+                StopAllCoroutines();
+                StartCoroutine(SpawnBot(.1f));
+
                 break;
             case GameState.Menu:
-                SceneManager.LoadScene("Menu");
+                SceneManager.LoadScene("Game");
+                if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(true);
                 break;
             case GameState.GameOver:
                 StopAllCoroutines();
@@ -76,44 +83,38 @@ public class GameManager : MonoBehaviour
 
     private void InitGame()
     {
-        Brobot b = Factory.Instance.SpawnBot(new Vector3(-10, 0, 0), true, m_Speed);
-        FactoryEvents.SpawnedInitialBrobot?.Invoke(b);
-        ChangePlayerBrobot(b);
-        StartCoroutine(SpawnBrobotPair(.1f));
+        FactoryEvents.SpawnedBot?.Invoke();
         GameCanvas.Instance.gameObject.SetActive(!EasyMode);
-
-        playerScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
-
-        /*playerScoreText.text = "Score: " + playerScore.ToString();
-        playerScoreText.fontSize = 30;
-        playerScoreText.alignment = TextAnchor.UpperLeft;
-        playerScoreText.color = Color.blue;*/
     }
 
     private void ChangePlayerBrobot(Brobot b)
     {
         PlayerBrobot = b;
-        PlayerBrobot.SetAsPlayerBrobot();
     }
 
-    private IEnumerator SpawnBrobotPair(float timeToWait)
+    private IEnumerator SpawnBot(float timeToWait)
     {
         yield return new WaitForSeconds(timeToWait);
-        //Vector3 leftSpawnPos = new Vector3(PlayerBrobot.transform.position.x - m_SpawnXOffset, 0, 0);
-        //Vector3 rightSpawnPos = new Vector3(PlayerBrobot.transform.position.x + m_SpawnXOffset, 0, 0);
-        //Factory.Instance.SpawnBot(leftSpawnPos, true, m_Speed);
-        Vector3 spawnPos = new Vector3(PlayerBrobot.transform.position.x + (PlayerBrobot.Direction ? m_SpawnXOffset : -m_SpawnXOffset), 0, 0);
-        Factory.Instance.SpawnBot(spawnPos, !PlayerBrobot.Direction, m_Speed);
-        FactoryEvents.SpawnedPair?.Invoke();
+        if (State == GameState.Playing) {
+            Vector3 spawnPos = new Vector3(PlayerBrobot.transform.position.x + (PlayerBrobot.Direction ? m_SpawnXOffset : -m_SpawnXOffset), 0, 0);
+            Factory.Instance.SpawnBot(spawnPos, !PlayerBrobot.Direction, m_Speed);
+        } else if (State == GameState.Menu) {
+            Brobot b = Factory.Instance.SpawnBot(new Vector3(-20,0,0), true, m_Speed);
+            ChangePlayerBrobot(b);
+        }
+        FactoryEvents.SpawnedBot?.Invoke();
     }
 
-    private void OnSpawnedPair()
+    private void OnSpawnedBot()
     {
-        if (State != GameState.Playing) return;
-        float timeToWait = 100f / (m_gameSpeedUpFactor + Time.timeSinceLevelLoad);
-        float randomBias = Random.Range(-1f, 1f);
-        timeToWait = Mathf.Clamp(timeToWait + randomBias, 0f, 10f);
-        StartCoroutine(SpawnBrobotPair(timeToWait));
+        if (State == GameState.Playing) {
+            float timeToWait = 100f / (m_gameSpeedUpFactor + Time.timeSinceLevelLoad);
+            float randomBias = Random.Range(-1f, 1f);
+            timeToWait = Mathf.Clamp(timeToWait + randomBias, 0f, 10f);
+            StartCoroutine(SpawnBot(timeToWait));
+        } else if (State == GameState.Menu) {
+            StartCoroutine(SpawnBot(3f));
+        } else return;
     }
 }
 

@@ -62,15 +62,10 @@ public class Brobot : MonoBehaviour
 
     public void MissDap()
     {
-        MissCount++;
+        if (GameManager.Instance.State == GameState.Playing) MissCount++;
         if (MissCount == 3 && !GameManager.Instance.m_cheatMode) {
             GameManager.Instance.ChangeState(GameState.GameOver);
         }
-    }
-
-    public void SetAsPlayerBrobot()
-    {
-        //Debug.Log(gameObject.name + ": I'm the player !");
     }
 
     private void OnTriggerExit2D(Collider2D otherCollider) // When I leave an other Brobot

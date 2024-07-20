@@ -20,7 +20,8 @@ public class Exterminator : MonoBehaviour
     private void OnTriggerExit2D(Collider2D otherCollider)
     {
         Brobot brobot = otherCollider.GetComponent<Brobot>();
-        if (brobot == null || !brobot.HasCrossed) return;
-        Destroy(brobot);
+        if (brobot == null) return;
+        else if (GameManager.Instance.State == GameState.Playing && brobot.HasCrossed) Destroy(brobot.gameObject);
+        else Destroy(brobot.gameObject);
     }
 }
