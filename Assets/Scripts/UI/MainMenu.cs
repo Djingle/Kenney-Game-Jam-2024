@@ -24,5 +24,9 @@ public class MainMenu : MonoBehaviour
         Debug.Log("ison : " + m_EasyToggle.isOn);
         GameManager.Instance.EasyMode = m_EasyToggle.isOn;
     }
+    private void OnDisable()
+    {
+        GameManager.Instance.EasyMode = m_EasyToggle.isOn;
+    }
 
 }

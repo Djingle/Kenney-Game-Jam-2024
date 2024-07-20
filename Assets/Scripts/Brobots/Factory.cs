@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Factory : MonoBehaviour
@@ -38,6 +39,14 @@ public class Factory : MonoBehaviour
                 botPrefab = m_YellowBotPrefab; break;
             default:
                 botPrefab = m_BlueBotPrefab; break;
+        }
+        RaycastHit2D hit;
+        hit = Physics2D.Raycast(new Vector2(position.x, position.y), Vector2.zero);
+        while (hit.collider != null) {
+            Brobot hitbro = hit.transform.gameObject.GetComponent<Brobot>();
+            Debug.Log("YA QQN WESH");
+            position.x = position.x + (direction ? -3 : 3);
+            hit = Physics2D.Raycast(new Vector2(position.x, position.y), Vector2.zero);
         }
         GameObject instance = Instantiate(botPrefab, position, Quaternion.identity);
         Brobot brobot = instance.GetComponent<Brobot>();

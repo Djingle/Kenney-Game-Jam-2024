@@ -9,11 +9,12 @@ public class GameManager : MonoBehaviour
     // The state the game is currently in. It should only be updated by ChangeState
     public GameState State { get; private set; }
     public Brobot PlayerBrobot { get; private set; }
-    public bool EasyMode { get; set; }
+    public bool EasyMode { get; set; } = false;
 
-    float m_SpawnXOffset = 30;
+    float m_SpawnXOffset = 20;
     float m_Speed = 5f;
     float m_gameSpeedUpFactor = 25; // The higher, the faster the game accelerates
+    public bool m_cheatMode;
     public static int playerScore;
 
     private void Awake()
@@ -88,8 +89,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator SpawnBrobotPair(float timeToWait)
     {
         yield return new WaitForSeconds(timeToWait);
-        Vector3 leftSpawnPos = new Vector3(-m_SpawnXOffset, 0, 0);
-        Vector3 rightSpawnPos = new Vector3(m_SpawnXOffset, 0, 0);
+        Vector3 leftSpawnPos = new Vector3(PlayerBrobot.transform.position.x - m_SpawnXOffset, 0, 0);
+        Vector3 rightSpawnPos = new Vector3(PlayerBrobot.transform.position.x + m_SpawnXOffset, 0, 0);
         Factory.Instance.SpawnBot(leftSpawnPos, true, m_Speed);
         Factory.Instance.SpawnBot(rightSpawnPos, false, m_Speed);
         FactoryEvents.SpawnedPair?.Invoke();

@@ -37,7 +37,6 @@ public class Brobot : MonoBehaviour
 
     public void TryDap(BrobotType inputType) // The dap should succeed if we cross an other brobot (going in the opposite direction, and if the input is right)
     {
-        Debug.Log("easy mode : " + GameManager.Instance.EasyMode);
         List<Collider2D> overlappingColliders = new List<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
 
@@ -63,7 +62,7 @@ public class Brobot : MonoBehaviour
     public void MissDap()
     {
         MissCount++;
-        if (MissCount == 3) {
+        if (MissCount == 3 && !GameManager.Instance.m_cheatMode) {
             GameManager.Instance.ChangeState(GameState.GameOver);
         }
     }
