@@ -408,67 +408,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07da4b6c78d88ae498f7f9127f728f25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_GreyBotPrefab: {fileID: 0}
-  m_GreenBotPrefab: {fileID: 0}
-  m_YellowBotPrefab: {fileID: 0}
-  m_RedBotPrefab: {fileID: 0}
---- !u!1001 &1692940455
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7738546260624886213, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_Name
-      value: BlueBrobot
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -8.072071
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.3992076
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.033224866
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868900612148184987, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
+  m_BlueBotPrefab: {fileID: 7738546260624886213, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
+  m_GreenBotPrefab: {fileID: 7895990099558297379, guid: e160aeff2066e4649b8d9dad23ed17c9, type: 3}
+  m_RedBotPrefab: {fileID: 5078013532859904049, guid: 9a78ec69825408c40b2a569d4dce6954, type: 3}
+  m_YellowBotPrefab: {fileID: 2785225106894578233, guid: 9468f554eedeade4f871a6ac7124ba69, type: 3}
 --- !u!1 &2112920182
 GameObject:
   m_ObjectHideFlags: 0
@@ -56925,4 +56868,3 @@ SceneRoots:
   - {fileID: 2112920184}
   - {fileID: 693981481}
   - {fileID: 1512412769}
-  - {fileID: 1692940455}

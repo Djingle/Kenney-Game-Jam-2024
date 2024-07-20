@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
     // The event called each time GameManager.Instance.ChangeState is called. Any script that cares about a change of state should listen to this event
     public static event Action<GameState> StateChanged;
 
+    float m_SpawnXOffset = 30;
+    float m_Speed = .02f;
+    float m_gameSpeedUpFactor = 15; // The higher, the faster the game accelerates
+
     private void Awake()
     {
         // Keep the GameManager when loading new scenes
@@ -24,6 +28,13 @@ public class GameManager : MonoBehaviour
             Destroy(this);
             return;
         }
+
+        FactoryEvents.SpawnedPair += OnSpawnedPair;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(SpawnBrobotPair(.1f));
     }
 
     public void ChangeState(GameState newState)
@@ -40,6 +51,23 @@ public class GameManager : MonoBehaviour
 
         // Send the event to every listening script
         StateChanged?.Invoke(newState);
+    }
+
+    private IEnumerator SpawnBrobotPair(float timeToWait)
+    {
+        yield return new WaitForSeconds(timeToWait);
+        Vector3 leftSpawnPos = new Vector3(-m_SpawnXOffset, 0, 0);
+        Vector3 rightSpawnPos = new Vector3(m_SpawnXOffset, 0, 0);
+        Factory.Instance.SpawnBot(leftSpawnPos, true, m_Speed);
+        Factory.Instance.SpawnBot(rightSpawnPos, false, m_Speed);
+        FactoryEvents.SpawnedPair?.Invoke();
+    }
+
+    private void OnSpawnedPair()
+    {
+        float timeToWait = 50f / (m_gameSpeedUpFactor + Time.timeSinceLevelLoad);
+        Debug.Log("time to wait : " + timeToWait + ", time sine level load : " + Time.timeSinceLevelLoad);
+        StartCoroutine(SpawnBrobotPair(timeToWait));
     }
 }
 

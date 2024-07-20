@@ -10,7 +10,6 @@ public class Brobot : MonoBehaviour
 
     private void Start()
     {
-        Init(false, .5f);
         m_Animator = GetComponent<Animator>();
     }
     public void Init(bool direction, float speed)
@@ -22,7 +21,7 @@ public class Brobot : MonoBehaviour
 
     private void Update()
     {
-        m_Animator.Play("rrWalk");
+        //m_Animator.Play("rrWalk");
         transform.position += m_Displacement;
     }
 }
