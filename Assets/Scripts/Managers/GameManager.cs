@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,11 +12,13 @@ public class GameManager : MonoBehaviour
     public Brobot PlayerBrobot { get; private set; }
     public bool EasyMode { get; set; } = false;
 
+    private Text playerScoreText;
+
     float m_SpawnXOffset = 20;
     float m_Speed = 5f;
     float m_gameSpeedUpFactor = 25; // The higher, the faster the game accelerates
     public bool m_cheatMode;
-    public static int playerScore;
+    public static int playerScore = 0;
 
     private void Awake()
     {
@@ -78,6 +81,13 @@ public class GameManager : MonoBehaviour
         ChangePlayerBrobot(b);
         StartCoroutine(SpawnBrobotPair(.1f));
         GameCanvas.Instance.gameObject.SetActive(!EasyMode);
+
+        playerScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
+
+        /*playerScoreText.text = "Score: " + playerScore.ToString();
+        playerScoreText.fontSize = 30;
+        playerScoreText.alignment = TextAnchor.UpperLeft;
+        playerScoreText.color = Color.blue;*/
     }
 
     private void ChangePlayerBrobot(Brobot b)
