@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     float m_SpawnXOffset = 30;
     float m_Speed = .02f;
     float m_gameSpeedUpFactor = 15; // The higher, the faster the game accelerates
+    public static int playerScore;
 
     private void Awake()
     {
