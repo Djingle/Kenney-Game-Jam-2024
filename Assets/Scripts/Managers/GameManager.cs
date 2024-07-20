@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
     public GameObject m_MainMenuPrefab;
     public GameObject m_MainMenu;
 
-    private Text playerScoreText;
-
     float m_SpawnXOffset = 20;
     float m_Speed = 5f;
     float m_gameSpeedUpFactor = 25; // The higher, the faster the game accelerates
