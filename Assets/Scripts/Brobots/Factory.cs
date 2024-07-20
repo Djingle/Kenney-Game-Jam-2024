@@ -13,9 +13,6 @@ public class Factory : MonoBehaviour
 
     private void Awake()
     {
-        // Keep the Factory when loading new scenes
-        DontDestroyOnLoad(gameObject);
-
         // Singleton checks
         if (Instance == null) { // If there is no instance of Factory yet, then this one becomes the only instance
             Instance = this;
@@ -26,7 +23,7 @@ public class Factory : MonoBehaviour
         }
     }
 
-    public Brobot SpawnBot(Vector3 position, bool direction, float speed) // Should return a Brobot
+    public Brobot SpawnBot(Vector3 position, bool direction, float speed, BrobotType type = BrobotType.Blue)
     {
         int spawnType = Random.Range(0, 4);
         GameObject botPrefab;

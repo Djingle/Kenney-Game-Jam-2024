@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -8,11 +7,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     // The state the game is currently in. It should only be updated by ChangeState
     public GameState State { get; private set; }
-    // The event called each time GameManager.Instance.ChangeState is called. Any script that cares about a change of state should listen to this event
-    public static event Action<GameState> StateChanged;
+    public Brobot ActiveBrobot { get; private set; }
 
     float m_SpawnXOffset = 30;
-    float m_Speed = .02f;
+    float m_Speed = 5f;
     float m_gameSpeedUpFactor = 15; // The higher, the faster the game accelerates
     public static int playerScore;
 
@@ -31,10 +29,14 @@ public class GameManager : MonoBehaviour
         }
 
         FactoryEvents.SpawnedPair += OnSpawnedPair;
+        BrobotEvents.SuccessfulDap += (b) => ChangeActiveBrobot(b);
     }
 
     private void Start()
     {
+        Brobot b = Factory.Instance.SpawnBot(new Vector3(-10, 0, 0), true, m_Speed);
+        FactoryEvents.SpawnedInitialBrobot?.Invoke(b);
+        ChangeActiveBrobot(b);
         StartCoroutine(SpawnBrobotPair(.1f));
     }
 
@@ -51,7 +53,12 @@ public class GameManager : MonoBehaviour
         }
 
         // Send the event to every listening script
-        StateChanged?.Invoke(newState);
+        GameManagerEvents.StateChanged?.Invoke(newState);
+    }
+
+    private void ChangeActiveBrobot(Brobot b)
+    {
+        ActiveBrobot = b;
     }
 
     private IEnumerator SpawnBrobotPair(float timeToWait)
@@ -67,7 +74,8 @@ public class GameManager : MonoBehaviour
     private void OnSpawnedPair()
     {
         float timeToWait = 50f / (m_gameSpeedUpFactor + Time.timeSinceLevelLoad);
-        Debug.Log("time to wait : " + timeToWait + ", time sine level load : " + Time.timeSinceLevelLoad);
+        float randomBias = Random.Range(-1f, 1f);
+        timeToWait = Mathf.Clamp(timeToWait + randomBias, 0f, 10f);
         StartCoroutine(SpawnBrobotPair(timeToWait));
     }
 }
