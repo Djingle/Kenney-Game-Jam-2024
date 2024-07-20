@@ -89,10 +89,11 @@ public class GameManager : MonoBehaviour
     private IEnumerator SpawnBrobotPair(float timeToWait)
     {
         yield return new WaitForSeconds(timeToWait);
-        Vector3 leftSpawnPos = new Vector3(PlayerBrobot.transform.position.x - m_SpawnXOffset, 0, 0);
-        Vector3 rightSpawnPos = new Vector3(PlayerBrobot.transform.position.x + m_SpawnXOffset, 0, 0);
-        Factory.Instance.SpawnBot(leftSpawnPos, true, m_Speed);
-        Factory.Instance.SpawnBot(rightSpawnPos, false, m_Speed);
+        //Vector3 leftSpawnPos = new Vector3(PlayerBrobot.transform.position.x - m_SpawnXOffset, 0, 0);
+        //Vector3 rightSpawnPos = new Vector3(PlayerBrobot.transform.position.x + m_SpawnXOffset, 0, 0);
+        //Factory.Instance.SpawnBot(leftSpawnPos, true, m_Speed);
+        Vector3 spawnPos = new Vector3(PlayerBrobot.transform.position.x + (PlayerBrobot.Direction ? m_SpawnXOffset : -m_SpawnXOffset), 0, 0);
+        Factory.Instance.SpawnBot(spawnPos, !PlayerBrobot.Direction, m_Speed);
         FactoryEvents.SpawnedPair?.Invoke();
     }
 

@@ -10,7 +10,7 @@ public class Brobot : MonoBehaviour
     Rigidbody2D m_RigidBody;
     SpriteRenderer m_SpriteRenderer;
     const float k_DespawnDistance = 13.5f;
-    const float k_ColliderOffset = 1.0f;
+    const float k_ColliderOffset = 0.0f;
     public float Speed {get; private set; }
     public bool Direction { get; private set; }
     [field: SerializeField] public BrobotType Type { get; private set; }
