@@ -18,7 +18,7 @@ public class Factory : MonoBehaviour
             Instance = this;
         } else {                // If a Factory instance already exists, destroy the new one
             Debug.LogWarning("Factory Instance already exists, destroying the duplicate");
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
     }

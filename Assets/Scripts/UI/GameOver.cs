@@ -28,11 +28,11 @@ public class GameOver : MonoBehaviour
 
     public void PressRestartButton()
     {
-        SceneManager.LoadScene("Game");
+        GameManager.Instance.ChangeState(GameState.Playing);
     }
 
     public void PressQuitButton()
     {
-        SceneManager.LoadScene("Menu");
+        GameManager.Instance.ChangeState(GameState.Menu);
     }
 }

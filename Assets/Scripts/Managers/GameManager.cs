@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,11 +8,12 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     // The state the game is currently in. It should only be updated by ChangeState
     public GameState State { get; private set; }
-    public Brobot ActiveBrobot { get; private set; }
+    public Brobot PlayerBrobot { get; private set; }
+    public bool EasyMode { get; set; }
 
     float m_SpawnXOffset = 30;
     float m_Speed = 5f;
-    float m_gameSpeedUpFactor = 15; // The higher, the faster the game accelerates
+    float m_gameSpeedUpFactor = 25; // The higher, the faster the game accelerates
     public static int playerScore;
 
     private void Awake()
@@ -24,20 +26,18 @@ public class GameManager : MonoBehaviour
             Instance = this;
         } else {                // If a GameManager instance already exists, destroy the new one
             Debug.LogWarning("GameManager Instance already exists, destroying the duplicate");
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
 
         FactoryEvents.SpawnedPair += OnSpawnedPair;
-        BrobotEvents.SuccessfulDap += (b) => ChangeActiveBrobot(b);
+        BrobotEvents.SuccessfulDap += (b) => ChangePlayerBrobot(b);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Start()
     {
-        Brobot b = Factory.Instance.SpawnBot(new Vector3(-10, 0, 0), true, m_Speed);
-        FactoryEvents.SpawnedInitialBrobot?.Invoke(b);
-        ChangeActiveBrobot(b);
-        StartCoroutine(SpawnBrobotPair(.1f));
+        ChangeState(GameState.Menu);
     }
 
     public void ChangeState(GameState newState)
@@ -47,8 +47,17 @@ public class GameManager : MonoBehaviour
         // Run some code depending on the new state
         switch (newState) {
             case GameState.Playing:
+                SceneManager.LoadScene("Game");
                 break;
             case GameState.Menu:
+                SceneManager.LoadScene("Menu");
+                break;
+            case GameState.GameOver:
+                StopAllCoroutines();
+                SceneManager.LoadScene("GameOver");
+                break;
+            case GameState.Credits:
+                SceneManager.LoadScene("Credits");
                 break;
         }
 
@@ -56,9 +65,24 @@ public class GameManager : MonoBehaviour
         GameManagerEvents.StateChanged?.Invoke(newState);
     }
 
-    private void ChangeActiveBrobot(Brobot b)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ActiveBrobot = b;
+        if (scene.name == "Game") InitGame();
+    }
+
+    private void InitGame()
+    {
+        Brobot b = Factory.Instance.SpawnBot(new Vector3(-10, 0, 0), true, m_Speed);
+        FactoryEvents.SpawnedInitialBrobot?.Invoke(b);
+        ChangePlayerBrobot(b);
+        StartCoroutine(SpawnBrobotPair(.1f));
+        GameCanvas.Instance.gameObject.SetActive(!EasyMode);
+    }
+
+    private void ChangePlayerBrobot(Brobot b)
+    {
+        PlayerBrobot = b;
+        PlayerBrobot.SetAsPlayerBrobot();
     }
 
     private IEnumerator SpawnBrobotPair(float timeToWait)
@@ -73,7 +97,8 @@ public class GameManager : MonoBehaviour
 
     private void OnSpawnedPair()
     {
-        float timeToWait = 50f / (m_gameSpeedUpFactor + Time.timeSinceLevelLoad);
+        if (State != GameState.Playing) return;
+        float timeToWait = 100f / (m_gameSpeedUpFactor + Time.timeSinceLevelLoad);
         float randomBias = Random.Range(-1f, 1f);
         timeToWait = Mathf.Clamp(timeToWait + randomBias, 0f, 10f);
         StartCoroutine(SpawnBrobotPair(timeToWait));
@@ -84,5 +109,7 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     Playing,
-    Menu
+    Menu,
+    GameOver,
+    Credits
 }

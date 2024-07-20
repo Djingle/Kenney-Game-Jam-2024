@@ -15,15 +15,15 @@ public class Cameraman : MonoBehaviour
     Coroutine m_TransitionCoroutine = null;
     private void Awake()
     {
-        // Keep the InputManager when loading new scenes
+        // Keep the Cameraman when loading new scenes
         DontDestroyOnLoad(gameObject);
 
         // Singleton checks
-        if (Instance == null) { // If there is no instance of InputManager yet, then this one becomes the only instance
+        if (Instance == null) { // If there is no instance of Cameraman yet, then this one becomes the only instance
             Instance = this;
-        } else {                // If a InputManager instance already exists, destroy the new one
-            Debug.LogWarning("InputManager Instance already exists, destroying the duplicate");
-            Destroy(this);
+        } else {                // If a Cameraman instance already exists, destroy the new one
+            Debug.LogWarning("Cameraman Instance already exists, destroying the duplicate");
+            Destroy(gameObject);
             return;
         }
 
@@ -54,6 +54,7 @@ public class Cameraman : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!GameManager.Instance.PlayerBrobot) return;
         if (m_TransitionCoroutine == null) {
             float targetX = Target.position.x + m_XOffset;
             transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
