@@ -60,13 +60,15 @@ public class GameManager : MonoBehaviour
             case GameState.Menu:
                 SceneManager.LoadScene("Game");
                 if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(true);
+                if (CreditsMenu.Instance != null) CreditsMenu.Instance.gameObject.SetActive(false);
                 break;
             case GameState.GameOver:
                 StopAllCoroutines();
-                SceneManager.LoadScene("GameOver");
+                if (GameOver.Instance != null) GameOver.Instance.gameObject.SetActive(true);
                 break;
             case GameState.Credits:
-                SceneManager.LoadScene("Credits");
+                if (CreditsMenu.Instance != null) CreditsMenu.Instance.gameObject.SetActive(true);
+                if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(false);
                 break;
         }
 

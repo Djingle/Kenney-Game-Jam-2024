@@ -629,7 +629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EasyToggle: {fileID: 7364900266183914699}
-  m_Canvas: {fileID: 0}
+  m_Canvas: {fileID: 3387783177730066968}
 --- !u!1 &6304462617153066640
 GameObject:
   m_ObjectHideFlags: 0

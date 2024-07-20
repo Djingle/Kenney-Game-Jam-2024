@@ -1,39 +1,73 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
-    // Make the text object inaccessible to other classes
-    private Text playerScoreText;
+    // Make the text object visible in the inspector
+    public TextMeshProUGUI playerScoreText;
 
-    // Start is called before the first frame update
-    void Start()
+    public static GameOver Instance { get; private set; }
+    public Canvas m_Canvas;
+
+    private void Awake()
     {
-        // Start by finding our player score text object first so that Unity knows what text I want to code
-        playerScoreText = GameObject.Find("PlayerScoreText").GetComponent<Text>();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogWarning("GameManager Instance already exists, destroying the duplicate");
+            Destroy(gameObject);
+            return;
+        }
+
+        m_Canvas = GetComponentInChildren<Canvas>();
+        m_Canvas.worldCamera = Camera.main;
+        m_Canvas.planeDistance = 8;
+
+        GameState state = new GameState();
+
+        // If the state is not equal to game over, then hide the game over object
+        if (state != GameState.GameOver)
+        { 
+            gameObject.SetActive(false); 
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // Display the player's final score on update
         playerScoreText.text = "Final Score: " + GameManager.playerScore.ToString();
         playerScoreText.fontSize = 20;
-        playerScoreText.alignment = TextAnchor.MiddleCenter;
+        playerScoreText.alignment = TextAlignmentOptions.Center;
         playerScoreText.color = Color.white;
+
     }
 
-    //public void PressRestartButton()
-    //{
-    //    SceneManager.LoadScene("Game");
-    //    GameManager.Instance.ChangeState(GameState.Playing);
-    //}
+    public void PressRestartButton()
+    {
+        gameObject.SetActive(false);
+
+        GameManager.Instance.ChangeState(GameState.Playing);
+
+        // Reset the player score and miss count to 0
+        GameManager.playerScore = 0;
+        Brobot.MissCount = 0;
+    }
 
     public void PressQuitButton()
     {
+        gameObject.SetActive(false);
+
         GameManager.Instance.ChangeState(GameState.Menu);
+
+        // Reset the player score and miss count to 0
+        GameManager.playerScore = 0;
+        Brobot.MissCount = 0;
     }
 }

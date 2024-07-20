@@ -17,7 +17,7 @@ public class Brobot : MonoBehaviour
 
     public bool HasDapped { get; private set; }
     public bool HasCrossed { get; private set; }
-    public int MissCount { get; private set; } = 0;
+    public static int MissCount = 0;
 
     private void Awake()
     {
