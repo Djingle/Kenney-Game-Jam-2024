@@ -54,6 +54,7 @@ public class Brobot : MonoBehaviour
             if (inputType == brobot.Type || GameManager.Instance.EasyMode) {
                 BrobotEvents.SuccessfulDap?.Invoke(brobot);
                 HasDapped = true;
+                GameManager.playerScore += 1;
                 return;
             }
         }
