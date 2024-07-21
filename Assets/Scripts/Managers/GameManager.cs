@@ -74,13 +74,12 @@ public class GameManager : MonoBehaviour
 
                 break;
             case GameState.GameOver:
+                if (GameOver.Instance != null) GameOver.Instance.gameObject.SetActive(true);
                 if (GameCanvas.Instance != null) GameCanvas.Instance.gameObject.SetActive(false);
 
                 GameCanvas.mainMenuMusic.Stop();
 
                 StopAllCoroutines();
-                if (GameOver.Instance != null) GameOver.Instance.gameObject.SetActive(true);
-
                 break;
             case GameState.Credits:
                 if (CreditsMenu.Instance != null) CreditsMenu.Instance.gameObject.SetActive(true);
