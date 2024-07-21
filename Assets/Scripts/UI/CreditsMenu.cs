@@ -46,6 +46,11 @@ public class CreditsMenu : MonoBehaviour
 
     public void PressBackButton()
     {
+        if (GameCanvas.menuSelectSound != null)
+        {
+            GameCanvas.menuSelectSound.Play();
+        }
+
         gameObject.SetActive(false);
 
         GameManager.Instance.ChangeState(GameState.Menu);

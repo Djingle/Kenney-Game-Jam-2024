@@ -34,11 +34,21 @@ public class MainMenu : MonoBehaviour
     }
     public void PressPlayButton()
     {
+        if (GameCanvas.menuSelectSound != null)
+        {
+            GameCanvas.menuSelectSound.Play();
+        }
+        
         GameManager.Instance.ChangeState(GameState.Playing);
     }
 
     public void PressCreditsButton()
     {
+        if (GameCanvas.menuSelectSound != null)
+        {
+            GameCanvas.menuSelectSound.Play();
+        }
+
         GameManager.Instance.ChangeState(GameState.Credits);
     }
 

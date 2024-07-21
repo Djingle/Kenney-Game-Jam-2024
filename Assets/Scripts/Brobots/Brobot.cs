@@ -22,6 +22,9 @@ public class Brobot : MonoBehaviour
     public static AudioSource backgroundMusic;
 
     private AudioSource gameOverSound;
+    public static AudioSource menuMovementSound;
+    public static AudioSource dapFailSound;
+
 
     private void Awake()
     {
@@ -34,6 +37,11 @@ public class Brobot : MonoBehaviour
         backgroundMusic = GameObject.Find("GameMusic").GetComponent<AudioSource>();
 
         gameOverSound = GameObject.Find("GameOverSound").GetComponent<AudioSource>();
+
+        menuMovementSound = GameObject.Find("MenuMovementSound").GetComponent<AudioSource>();
+        menuMovementSound.Play();
+
+        dapFailSound = GameObject.Find("MissDapSound").GetComponent<AudioSource>();
     }
 
     public void Init(bool direction, float speed)
@@ -84,7 +92,11 @@ public class Brobot : MonoBehaviour
 
     public void MissDap()
     {
-        if (GameManager.Instance.State == GameState.Playing) MissCount++;
+        if (GameManager.Instance.State == GameState.Playing)
+        { 
+            MissCount++;
+            dapFailSound.Play();
+        }
         if (MissCount == 3 && !GameManager.Instance.m_cheatMode) {
             gameOverSound.Play();
             GameManager.Instance.ChangeState(GameState.GameOver);
