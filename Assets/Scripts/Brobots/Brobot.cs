@@ -18,9 +18,6 @@ public class Brobot : MonoBehaviour
     public bool HasDapped { get; private set; }
     public bool HasCrossed { get; private set; }
 
-    int MissCount = 0;
-
-
     public static AudioSource backgroundMusic;
 
     private AudioSource gameOverSound;
@@ -136,12 +133,11 @@ public class Brobot : MonoBehaviour
     {
         if (GameManager.Instance.State == GameState.Playing)
         {
-            Debug.Log("miss count : " + MissCount);
-            MissCount++;
+            //Debug.Log("miss count : " + GameManager.Instance.MissCount);
             GameManager.Instance.MissCount++;
             dapFailSound.Play();
-            if (MissCount == 1) m_SpriteRenderers[0].sprite = m_lilDamageSprite;
-            else if (MissCount == 2) m_SpriteRenderers[0].sprite = m_BigDamageSprite;
+            if (GameManager.Instance.MissCount == 1) m_SpriteRenderers[0].sprite = m_lilDamageSprite;
+            else if (GameManager.Instance.MissCount == 2) m_SpriteRenderers[0].sprite = m_BigDamageSprite;
         }
         if (MissCount >= 3 && !GameManager.Instance.m_cheatMode) {
             gameOverSound.Play();
