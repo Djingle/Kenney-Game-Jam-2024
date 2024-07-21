@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -9090990199010713614, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1c26f16f66489444fbfc9e0572491194, type: 3}
     - target: {fileID: 1407515316153305959, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -24,6 +28,18 @@ PrefabInstance:
       propertyPath: m_lilDamageSprite
       value: 
       objectReference: {fileID: 21300000, guid: 5ffcf52149aef454e974980e5d63bdaf, type: 3}
+    - target: {fileID: 2444703780393781195, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
+      propertyPath: <TextColor>k__BackingField.b
+      value: 0.3137255
+      objectReference: {fileID: 0}
+    - target: {fileID: 2444703780393781195, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
+      propertyPath: <TextColor>k__BackingField.g
+      value: 0.4784314
+      objectReference: {fileID: 0}
+    - target: {fileID: 2444703780393781195, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
+      propertyPath: <TextColor>k__BackingField.r
+      value: 0.8431373
+      objectReference: {fileID: 0}
     - target: {fileID: 4441822544136440649, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
       propertyPath: m_Sprite
       value: 

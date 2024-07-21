@@ -25,7 +25,7 @@ public class Factory : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        BrobotEvents.SuccessfulDap += (b) => SpawnScorePopUp(b);
+        BrobotEvents.SuccessfulDap += (b) => SpawnPopUp(b);
     }
 
     public Brobot SpawnBot(Vector3 position, bool direction, float speed, BrobotType type = BrobotType.Blue)
@@ -57,13 +57,13 @@ public class Factory : MonoBehaviour
         return brobot;
     }
 
-    public ScorePopUp SpawnScorePopUp(Brobot brobot)
+    public TextPopUp SpawnPopUp(Brobot brobot, string text="", float lifeTime = TextPopUp.k_BaseLifeTime, float force = TextPopUp.k_BaseForce)
     {
         Vector3 spawnPos = brobot.transform.position;
-        spawnPos.y += 3;
+        spawnPos.y += 2;
         GameObject popUp = Instantiate(m_ScorePopUpPrefab, spawnPos, Quaternion.identity);
-        ScorePopUp scorePopUp = popUp.GetComponent<ScorePopUp>();
-        scorePopUp.Init();
+        TextPopUp scorePopUp = popUp.GetComponent<TextPopUp>();
+        scorePopUp.Init(brobot, text, lifeTime, force);
         return scorePopUp;
     }
 }

@@ -9,11 +9,11 @@ public class Brobot : MonoBehaviour
     BoxCollider2D m_BoxCollider;
     Rigidbody2D m_RigidBody;
     SpriteRenderer[] m_SpriteRenderers;
-    const float k_DespawnDistance = 13.5f;
-    const float k_ColliderOffset = 0.0f;
+    public AudioSource AudioSource {  get; private set; }
     public float Speed {get; private set; }
     public bool Direction { get; private set; }
     [field: SerializeField] public BrobotType Type { get; private set; }
+    [field: SerializeField] public Color TextColor { get; private set; }
 
     public Sprite m_lilDamageSprite, m_BigDamageSprite;
     public bool HasDapped { get; private set; }
@@ -38,8 +38,8 @@ public class Brobot : MonoBehaviour
         m_BoxCollider = GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        AudioSource = GetComponent<AudioSource>();
 
-        
 
         // Find the background music immediately a brobot spawns in the game or menu
         backgroundMusic = GameObject.Find("GameMusic").GetComponent<AudioSource>();
@@ -95,13 +95,14 @@ public class Brobot : MonoBehaviour
         }
 
         foreach (Collider2D box in overlappingColliders) {
-            Brobot brobot = box.GetComponent<Brobot>();
-            if (brobot == null || brobot.HasDapped || brobot.Direction == this.Direction) continue;
+            Brobot bro = box.GetComponent<Brobot>();
+            if (bro == null || bro.HasDapped || bro.Direction == this.Direction) continue;
 
-            if (inputType == brobot.Type || GameManager.Instance.EasyMode) {
-                BrobotEvents.SuccessfulDap?.Invoke(brobot);
+            if (inputType == bro.Type || GameManager.Instance.EasyMode) {
+                BrobotEvents.SuccessfulDap?.Invoke(bro);
                 HasDapped = true;
                 GameManager.Instance.Score += 1;
+                bro.AudioSource.Play();
 
                 // Play the different score streak sounds once the player hit that streak mark
                 switch (GameManager.Instance.Score) {
