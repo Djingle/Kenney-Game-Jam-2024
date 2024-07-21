@@ -14,9 +14,13 @@ public class Brobot : MonoBehaviour
     [field: SerializeField] public BrobotType Type { get; private set; }
     [field: SerializeField] public Color TextColor { get; private set; }
 
+    public int MissCount { get; private set; } = 0;
+
     public Sprite m_lilDamageSprite, m_BigDamageSprite;
     public bool HasDapped { get; private set; }
     public bool HasCrossed { get; private set; }
+
+    public bool HasMissed { get; private set; } = false;
 
     public static AudioSource backgroundMusic;
 
@@ -79,13 +83,12 @@ public class Brobot : MonoBehaviour
 
     public void TryDap(BrobotType inputType) // The dap should succeed if we cross an other brobot (going in the opposite direction, and if the input is right)
     {
+        HasMissed = false;
         List<Collider2D> overlappingColliders = new List<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
         Debug.Log("tryna dap...");
 
         if (m_BoxCollider.OverlapCollider(filter, overlappingColliders) == 1 && !GameManager.Instance.EasyMode) {
-            Debug.Log("pas de frero");
-            MissDap();
             return;
         }
 
@@ -106,8 +109,10 @@ public class Brobot : MonoBehaviour
                     case 50: FiftyStreakSound.Play(); break;
                     case 100: HundredStreakSound.Play(); break;
                 }
-            } else
+            } else {
                 MissDap();
+                HasMissed = true;
+            }
             return;
         }
     }
@@ -133,11 +138,10 @@ public class Brobot : MonoBehaviour
     {
         if (GameManager.Instance.State == GameState.Playing)
         {
-            //Debug.Log("miss count : " + GameManager.Instance.MissCount);
-            GameManager.Instance.MissCount++;
+            MissCount++;
             dapFailSound.Play();
-            if (GameManager.Instance.MissCount == 1) m_SpriteRenderers[0].sprite = m_lilDamageSprite;
-            else if (GameManager.Instance.MissCount == 2) m_SpriteRenderers[0].sprite = m_BigDamageSprite;
+            if (MissCount == 1) m_SpriteRenderers[0].sprite = m_lilDamageSprite;
+            else if (MissCount == 2) m_SpriteRenderers[0].sprite = m_BigDamageSprite;
         }
         if (MissCount >= 3 && !GameManager.Instance.m_cheatMode) {
             gameOverSound.Play();
@@ -151,7 +155,7 @@ public class Brobot : MonoBehaviour
         if (otherBrobot == null) return;
         if (otherBrobot.Direction == this.Direction) return; // I just passed someone, whatever
         if (GameManager.Instance.PlayerBrobot == otherBrobot) HasCrossed = true; // Hey that was the player ! I crossed him !
-        if (HasCrossed && !HasDapped) { // But if we didn't dap
+        if (HasCrossed && !HasDapped && !HasMissed && !otherBrobot.HasMissed) { // But if we didn't dap
             BrobotEvents.FailedDap?.Invoke(otherBrobot); // Imma tell everyone
             otherBrobot.MissDap(); // And call MissDap on him
         }
