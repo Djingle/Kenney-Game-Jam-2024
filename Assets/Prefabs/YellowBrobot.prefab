@@ -20,6 +20,10 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.oldSize.x
       value: 2.875
       objectReference: {fileID: 0}
+    - target: {fileID: 1180114089947397259, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2444703780393781195, guid: 9ff4faf27db327d4e8c9a70e0b193366, type: 3}
       propertyPath: <Type>k__BackingField
       value: 3

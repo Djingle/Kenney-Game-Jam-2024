@@ -117,7 +117,7 @@ public class Brobot : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //m_Animator.Play("rrWalk");*
+        //if (Type == BrobotType.Yellow) m_Animator.Play("Walking");
 
         m_RigidBody.velocity = m_Displacement;
     }
