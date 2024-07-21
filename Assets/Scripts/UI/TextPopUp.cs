@@ -18,12 +18,22 @@ public class TextPopUp : MonoBehaviour
 
     public void Init(Brobot brobot, string text="", float lifeTime = k_BaseLifeTime, float force = k_BaseForce)
     {
-        if (text == "") m_Text = GameManager.Instance.Score.ToString();
-        else m_Text = text;
+        if (text == "") {
+            int score = GameManager.Instance.Score;
+            m_Text = GameManager.Instance.Score.ToString();
+            m_TextMesh.color = brobot.TextColor;
 
+            if (score == 10 || score == 25 || score == 50 || score == 100) {
+                lifeTime = 1.5f;
+                force = 8;
+                m_TextMesh.fontSize = 15;
+            }
+        m_TextMesh.color = brobot.TextColor;
+        } else m_Text = text;
         m_RigidBody.velocity = new Vector2(0, force);
         m_TextMesh.SetText(m_Text);
-        m_TextMesh.color = brobot.TextColor;
+
+        
         Destroy(gameObject, lifeTime);
     }
 }

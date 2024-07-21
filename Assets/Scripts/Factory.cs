@@ -47,7 +47,6 @@ public class Factory : MonoBehaviour
         RaycastHit2D hit;
         hit = Physics2D.Raycast(new Vector2(position.x, position.y), Vector2.zero);
         while (hit.collider && hit.transform.gameObject.GetComponent<Brobot>()) {
-            Debug.Log("YA QQN WESH");
             position.x = position.x + (direction ? -3 : 3);
             hit = Physics2D.Raycast(new Vector2(position.x, position.y), Vector2.zero);
         }
@@ -57,7 +56,7 @@ public class Factory : MonoBehaviour
         return brobot;
     }
 
-    public TextPopUp SpawnPopUp(Brobot brobot, string text="", float lifeTime = TextPopUp.k_BaseLifeTime, float force = TextPopUp.k_BaseForce)
+    public TextPopUp SpawnPopUp(Brobot brobot, string text = "", float lifeTime = TextPopUp.k_BaseLifeTime, float force = TextPopUp.k_BaseForce)
     {
         Vector3 spawnPos = brobot.transform.position;
         spawnPos.y += 2;

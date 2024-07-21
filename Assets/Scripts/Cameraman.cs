@@ -51,6 +51,16 @@ public class Cameraman : MonoBehaviour
         m_TransitionCoroutine = null;
     }
 
+    public IEnumerator SmoothMove(float targetX, float moveTime)
+    {
+        while (moveTime > 0) {
+            moveTime -= Time.deltaTime;
+            float nextX = Mathf.SmoothDamp(transform.position.x, targetX, ref m_CamVelocity, .1f);
+            transform.position = new Vector3(nextX, transform.position.y, transform.position.z);
+            yield return null;
+        }
+    }
+
 
     private void LateUpdate()
     {

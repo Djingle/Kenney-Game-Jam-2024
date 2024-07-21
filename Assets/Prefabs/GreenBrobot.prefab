@@ -21,6 +21,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 56166ef2654629844a2a95b71f57031f, type: 3}
     - target: {fileID: 2444703780393781195, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
+      propertyPath: <Type>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2444703780393781195, guid: ab3d7a58694afec48be8228ae4d1722b, type: 3}
       propertyPath: <TextColor>k__BackingField.a
       value: 1
       objectReference: {fileID: 0}

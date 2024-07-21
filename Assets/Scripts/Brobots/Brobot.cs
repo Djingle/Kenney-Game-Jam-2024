@@ -10,7 +10,6 @@ public class Brobot : MonoBehaviour
     Rigidbody2D m_RigidBody;
     SpriteRenderer[] m_SpriteRenderers;
     public AudioSource AudioSource {  get; private set; }
-    public float Speed {get; private set; }
     public bool Direction { get; private set; }
     [field: SerializeField] public BrobotType Type { get; private set; }
     [field: SerializeField] public Color TextColor { get; private set; }
@@ -66,8 +65,7 @@ public class Brobot : MonoBehaviour
     public void Init(bool direction, float speed)
     {
         Direction = direction;
-        Speed = speed;
-        m_Displacement = new Vector3(Direction ? 1 : -1, 0, 0) * Speed;
+        m_Displacement = new Vector3(Direction ? 1 : -1, 0, 0);
 
         if (!Direction) {
             m_BoxCollider.offset *= new Vector2(-1, 0);
@@ -86,11 +84,11 @@ public class Brobot : MonoBehaviour
     {
         List<Collider2D> overlappingColliders = new List<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
-        //Debug.Log("tryna dap...");
+        Debug.Log("tryna dap...");
 
-        if (m_BoxCollider.OverlapCollider(filter, overlappingColliders) == 0) {
+        if (m_BoxCollider.OverlapCollider(filter, overlappingColliders) == 1 && !GameManager.Instance.EasyMode) {
+            Debug.Log("pas de frero");
             MissDap();
-            //Debug.Log("no bro to dap");
             return;
         }
 
@@ -98,11 +96,10 @@ public class Brobot : MonoBehaviour
             Brobot bro = box.GetComponent<Brobot>();
             if (bro == null || bro.HasDapped || bro.Direction == this.Direction) continue;
 
-            if (inputType == bro.Type || GameManager.Instance.EasyMode) {
-                BrobotEvents.SuccessfulDap?.Invoke(bro);
+            if (inputType == bro.Type) {
                 HasDapped = true;
-                GameManager.Instance.Score += 1;
                 bro.AudioSource.Play();
+                BrobotEvents.SuccessfulDap?.Invoke(bro);
 
                 // Play the different score streak sounds once the player hit that streak mark
                 switch (GameManager.Instance.Score) {
@@ -112,8 +109,9 @@ public class Brobot : MonoBehaviour
                     case 50: FiftyStreakSound.Play(); break;
                     case 100: HundredStreakSound.Play(); break;
                 }
-                return;
-            } else MissDap();
+            } else
+                MissDap();
+            return;
         }
     }
 
@@ -145,7 +143,7 @@ public class Brobot : MonoBehaviour
             if (MissCount == 1) m_SpriteRenderers[0].sprite = m_lilDamageSprite;
             else if (MissCount == 2) m_SpriteRenderers[0].sprite = m_BigDamageSprite;
         }
-        if (MissCount == 3 && !GameManager.Instance.m_cheatMode) {
+        if (MissCount >= 3 && !GameManager.Instance.m_cheatMode) {
             gameOverSound.Play();
             GameManager.Instance.ChangeState(GameState.GameOver);
         }
@@ -167,6 +165,6 @@ public class Brobot : MonoBehaviour
     {
         //if (Type == BrobotType.Yellow) m_Animator.Play("Walking");
 
-        m_RigidBody.velocity = m_Displacement;
+        m_RigidBody.velocity = m_Displacement * GameManager.Instance.Speed;
     }
 }
