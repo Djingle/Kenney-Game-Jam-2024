@@ -6,6 +6,8 @@ public class GameCanvas : MonoBehaviour
 {
     Canvas m_Canvas;
     public static GameCanvas Instance {  get; private set; }
+    public static AudioSource menuSelectSound;
+
     private void Awake()
     {
         // Singleton checks
@@ -19,5 +21,7 @@ public class GameCanvas : MonoBehaviour
         m_Canvas = GetComponent<Canvas>();
         m_Canvas.worldCamera = Camera.main;
         m_Canvas.planeDistance = 9;
+
+        menuSelectSound = GameObject.Find("MenuSelectSound").GetComponent<AudioSource>();
     }
 }

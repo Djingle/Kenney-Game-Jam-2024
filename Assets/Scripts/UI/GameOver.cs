@@ -73,6 +73,11 @@ public class GameOver : MonoBehaviour
 
     public void PressRestartButton()
     {
+        if (GameCanvas.menuSelectSound != null)
+        {
+            GameCanvas.menuSelectSound.Play();
+        }
+
         gameObject.SetActive(false);
 
         GameManager.Instance.ChangeState(GameState.Playing);
