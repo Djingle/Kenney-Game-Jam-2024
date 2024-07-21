@@ -25,7 +25,10 @@ public class Brobot : MonoBehaviour
     public static AudioSource menuMovementSound;
     public static AudioSource dapFailSound;
 
-
+    private AudioSource TenScoreStreakSound;
+    private AudioSource TwentyFiveStreakSound;
+    private AudioSource FiftyStreakSound;
+    private AudioSource HundredStreakSound;
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
@@ -33,15 +36,28 @@ public class Brobot : MonoBehaviour
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
+        
+
         // Find the background music immediately a brobot spawns in the game or menu
         backgroundMusic = GameObject.Find("GameMusic").GetComponent<AudioSource>();
 
         gameOverSound = GameObject.Find("GameOverSound").GetComponent<AudioSource>();
 
         menuMovementSound = GameObject.Find("MenuMovementSound").GetComponent<AudioSource>();
-        menuMovementSound.Play();
+
+        GameState state = new GameState();
+
+        if (state == GameState.Menu)
+        {
+            menuMovementSound.Play();
+        }
 
         dapFailSound = GameObject.Find("MissDapSound").GetComponent<AudioSource>();
+
+        TenScoreStreakSound = GameObject.Find("10ScoreStreak").GetComponent<AudioSource>();
+        TwentyFiveStreakSound = GameObject.Find("25ScoreStreak").GetComponent<AudioSource>();
+        FiftyStreakSound = GameObject.Find("50ScoreStreak").GetComponent<AudioSource>();
+        HundredStreakSound = GameObject.Find("100ScoreStreak").GetComponent<AudioSource>();
     }
 
     public void Init(bool direction, float speed)
@@ -84,6 +100,28 @@ public class Brobot : MonoBehaviour
                 BrobotEvents.SuccessfulDap?.Invoke(brobot);
                 HasDapped = true;
                 GameManager.playerScore += 1;
+
+                // Play the different score streak sounds once the player hit that streak mark
+                if(GameManager.playerScore == 10)
+                {
+                    TenScoreStreakSound.Play();
+                }
+
+                else if (GameManager.playerScore == 25)
+                {
+                    TwentyFiveStreakSound.Play();
+                }
+
+                else if (GameManager.playerScore == 50)
+                {
+                    FiftyStreakSound.Play();
+                }
+
+                else if (GameManager.playerScore == 100)
+                {
+                    HundredStreakSound.Play();
+                }
+
                 Debug.Log("dap");
                 return;
             }
