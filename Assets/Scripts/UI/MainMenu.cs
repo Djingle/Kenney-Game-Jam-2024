@@ -7,6 +7,7 @@ public class MainMenu : MonoBehaviour
     public static MainMenu Instance { get; private set; }
     public Toggle m_EasyToggle;
     public Canvas m_Canvas;
+    private AudioSource menuMusic;
     private void Awake()
     {
         if (Instance == null) {
@@ -21,8 +22,15 @@ public class MainMenu : MonoBehaviour
         m_Canvas.worldCamera = Camera.main;
         m_Canvas.planeDistance = 8;
 
-
         GameManagerEvents.StateChanged += OnStateChanged;
+
+        menuMusic = GetComponentInChildren<AudioSource>();
+    }
+
+    private void Start()
+    {
+        menuMusic.loop = true;
+        menuMusic.Play();
     }
     public void PressPlayButton()
     {

@@ -13,6 +13,8 @@ public class GameOver : MonoBehaviour
     public static GameOver Instance { get; private set; }
     public Canvas m_Canvas;
 
+    private AudioSource gameOverMusic;
+
     private void Awake()
     {
         if (Instance == null)
@@ -30,6 +32,8 @@ public class GameOver : MonoBehaviour
         m_Canvas.worldCamera = Camera.main;
         m_Canvas.planeDistance = 8;
 
+        gameOverMusic = GetComponentInChildren<AudioSource>();
+
         GameState state = new GameState();
 
         // If the state is not equal to game over, then hide the game over object
@@ -39,8 +43,26 @@ public class GameOver : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // Play the game over music and its loop to true
+        gameOverMusic.loop = true;
+        gameOverMusic.Play();
+    }
+
     private void Update()
     {
+        // If a background music is found in the game, stop playing it as soon as the game over menu pops up
+        if (Brobot.backgroundMusic.isPlaying == true)
+        {
+            Brobot.backgroundMusic.Stop();
+        }
+
+        if (gameOverMusic.isPlaying == false)
+        {
+            gameOverMusic.Play();
+        }
+
         // Display the player's final score on update
         playerScoreText.text = "Final Score: " + GameManager.playerScore.ToString();
         playerScoreText.fontSize = 20;

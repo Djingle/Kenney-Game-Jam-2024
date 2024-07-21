@@ -8,6 +8,7 @@ public class CreditsMenu : MonoBehaviour
 {
     public static CreditsMenu Instance { get; private set; }
     public Canvas m_Canvas;
+    private AudioSource creditsMusic;
 
     private void Awake()
     {
@@ -22,6 +23,8 @@ public class CreditsMenu : MonoBehaviour
             return;
         }
 
+        creditsMusic = GetComponentInChildren<AudioSource>();
+
         m_Canvas = GetComponentInChildren<Canvas>();
         m_Canvas.worldCamera = Camera.main;
         m_Canvas.planeDistance = 8;
@@ -33,6 +36,12 @@ public class CreditsMenu : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+    }
+
+    private void Start()
+    {
+        creditsMusic.loop = true;
+        creditsMusic.Play();
     }
 
     public void PressBackButton()

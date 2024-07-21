@@ -53,6 +53,12 @@ public class GameManager : MonoBehaviour
         switch (newState) {
             case GameState.Playing:
                 if (PlayerBrobot == null) PlayerBrobot = Factory.Instance.SpawnBot(new Vector3(-15, 0,0), true, m_Speed);
+                
+                // Play the background music and set the loop to true inside the playing state
+                Brobot.backgroundMusic.loop = true;
+                Brobot.backgroundMusic.Play();
+
+
                 StopAllCoroutines();
                 StartCoroutine(SpawnBot(.1f));
 
@@ -61,14 +67,17 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene("Game");
                 if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(true);
                 if (CreditsMenu.Instance != null) CreditsMenu.Instance.gameObject.SetActive(false);
+
                 break;
             case GameState.GameOver:
                 StopAllCoroutines();
                 if (GameOver.Instance != null) GameOver.Instance.gameObject.SetActive(true);
+
                 break;
             case GameState.Credits:
                 if (CreditsMenu.Instance != null) CreditsMenu.Instance.gameObject.SetActive(true);
                 if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(false);
+
                 break;
         }
 
