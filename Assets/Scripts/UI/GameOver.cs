@@ -64,7 +64,7 @@ public class GameOver : MonoBehaviour
         }
 
         // Display the player's final score on update
-        playerScoreText.text = "Final Score: " + GameManager.playerScore.ToString();
+        playerScoreText.text = "Final Score: " + GameManager.Instance.Score.ToString();
         playerScoreText.fontSize = 20;
         playerScoreText.alignment = TextAlignmentOptions.Center;
         playerScoreText.color = Color.white;
@@ -83,8 +83,8 @@ public class GameOver : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.Playing);
 
         // Reset the player score and miss count to 0
-        GameManager.playerScore = 0;
-        Brobot.MissCount = 0;
+        GameManager.Instance.Score = 0;
+        GameManager.Instance.MissCount = 0;
     }
 
     public void PressQuitButton()
@@ -94,7 +94,7 @@ public class GameOver : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.Menu);
 
         // Reset the player score and miss count to 0
-        GameManager.playerScore = 0;
-        Brobot.MissCount = 0;
+        GameManager.Instance.Score = 0;
+        GameManager.Instance.MissCount = 0;
     }
 }

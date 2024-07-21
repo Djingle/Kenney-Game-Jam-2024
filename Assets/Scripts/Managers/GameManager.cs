@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameState State { get; private set; }
     public Brobot PlayerBrobot { get; private set; }
     public bool EasyMode { get; set; } = false;
+    public int MissCount { get; set; } = 0;
+    public int Score { get; set; } = 0;
     public GameObject m_MainMenuPrefab;
     public GameObject m_MainMenu;
 
@@ -19,7 +21,6 @@ public class GameManager : MonoBehaviour
     float m_Speed = 5f;
     float m_gameSpeedUpFactor = 25; // The higher, the faster the game accelerates
     public bool m_cheatMode;
-    public static int playerScore = 0;
 
     private void Awake()
     {
@@ -37,7 +38,6 @@ public class GameManager : MonoBehaviour
 
         FactoryEvents.SpawnedBot += OnSpawnedBot;
         BrobotEvents.SuccessfulDap += (b) => ChangePlayerBrobot(b);
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Start()
@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
             case GameState.Playing:
                 if (PlayerBrobot == null) PlayerBrobot = Factory.Instance.SpawnBot(new Vector3(-15, 0,0), true, m_Speed);
                 if (GameCanvas.Instance != null) GameCanvas.Instance.gameObject.SetActive(true);
+                if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(false);
 
                 // Play the background music and set the loop to true inside the playing state
                 Brobot.backgroundMusic.loop = true;
@@ -66,7 +67,6 @@ public class GameManager : MonoBehaviour
 
                 break;
             case GameState.Menu:
-                SceneManager.LoadScene("Game");
 
                 if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(true);
                 if (CreditsMenu.Instance != null) CreditsMenu.Instance.gameObject.SetActive(false);
@@ -93,11 +93,6 @@ public class GameManager : MonoBehaviour
         GameManagerEvents.StateChanged?.Invoke(newState);
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "Game") InitGame();
-    }
-
     private void InitGame()
     {
         FactoryEvents.SpawnedBot?.Invoke();
@@ -107,6 +102,7 @@ public class GameManager : MonoBehaviour
     private void ChangePlayerBrobot(Brobot b)
     {
         PlayerBrobot = b;
+        b.SetPlayer(true);
     }
 
     private IEnumerator SpawnBot(float timeToWait)

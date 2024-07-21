@@ -8,6 +8,8 @@ TagManager:
   - GreenRobot
   - RedRobot
   - YellowRobot
+  - track
+  - Body
   layers:
   - Default
   - TransparentFX
@@ -44,4 +46,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Map
+    uniqueID: 2319970799
+    locked: 0
+  - name: Brobot1
+    uniqueID: 238750197
+    locked: 0
+  - name: Brobot2
+    uniqueID: 3945102075
+    locked: 0
+  - name: BrobotPlayer
+    uniqueID: 1849463577
+    locked: 0
+  - name: Menu
+    uniqueID: 3910276483
     locked: 0

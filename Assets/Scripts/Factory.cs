@@ -12,6 +12,8 @@ public class Factory : MonoBehaviour
     public GameObject m_RedBotPrefab;
     public GameObject m_YellowBotPrefab;
 
+    public GameObject m_ScorePopUpPrefab;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -23,6 +25,7 @@ public class Factory : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        BrobotEvents.SuccessfulDap += (b) => SpawnScorePopUp(b);
     }
 
     public Brobot SpawnBot(Vector3 position, bool direction, float speed, BrobotType type = BrobotType.Blue)
@@ -52,5 +55,15 @@ public class Factory : MonoBehaviour
         Brobot brobot = instance.GetComponent<Brobot>();
         brobot.Init(direction, speed);
         return brobot;
+    }
+
+    public ScorePopUp SpawnScorePopUp(Brobot brobot)
+    {
+        Vector3 spawnPos = brobot.transform.position;
+        spawnPos.y += 3;
+        GameObject popUp = Instantiate(m_ScorePopUpPrefab, spawnPos, Quaternion.identity);
+        ScorePopUp scorePopUp = popUp.GetComponent<ScorePopUp>();
+        scorePopUp.Init();
+        return scorePopUp;
     }
 }
