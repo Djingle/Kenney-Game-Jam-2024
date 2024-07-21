@@ -42,29 +42,41 @@ public class Brobot : MonoBehaviour
         Speed = speed;
         m_Displacement = new Vector3(Direction ? 1 : -1, 0, 0) * Speed;
         m_SpriteRenderer.flipX = !Direction;
-        m_BoxCollider.offset = new Vector2(Direction ? k_ColliderOffset : -k_ColliderOffset, 0);
+        if (!Direction) m_BoxCollider.offset *= new Vector2(-1, 0);
     }
 
     public void TryDap(BrobotType inputType) // The dap should succeed if we cross an other brobot (going in the opposite direction, and if the input is right)
     {
         List<Collider2D> overlappingColliders = new List<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
+        Debug.Log("tryna dap...");
 
         if (m_BoxCollider.OverlapCollider(filter, overlappingColliders) == 0) {
             MissDap();
+            Debug.Log("no bro to dap");
             return;
         }
 
         foreach (Collider2D box in overlappingColliders) {
             Brobot brobot = box.GetComponent<Brobot>();
-            if (brobot == null || brobot.HasDapped) continue;
-            if (brobot.Direction == this.Direction)
+            if (brobot == null) {
+                Debug.Log("no bro");
+                continue;
+            }
+            if (brobot.HasDapped) {
+            Debug.Log("bro has already dapped someone");
+                continue;
+            }
+            if (brobot.Direction == this.Direction) {
+                Debug.Log("same direction. Can't cap");
                 continue; // If the collider is going in the same direction, we don't dap
+            }
             
             if (inputType == brobot.Type || GameManager.Instance.EasyMode) {
                 BrobotEvents.SuccessfulDap?.Invoke(brobot);
                 HasDapped = true;
                 GameManager.playerScore += 1;
+                Debug.Log("dap");
                 return;
             }
         }
