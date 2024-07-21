@@ -25,13 +25,15 @@ public class Brobot : MonoBehaviour
     public static AudioSource menuMovementSound;
     public static AudioSource dapFailSound;
 
-
+    
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
         m_BoxCollider = GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+
+        
 
         // Find the background music immediately a brobot spawns in the game or menu
         backgroundMusic = GameObject.Find("GameMusic").GetComponent<AudioSource>();
