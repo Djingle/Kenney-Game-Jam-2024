@@ -1,12 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Brobot : MonoBehaviour
 {
+    public float raydistance;
+
     Vector3 m_Displacement;
     Animator m_Animator;
-    BoxCollider2D m_BoxCollider;
+    BoxCollider2D m_BrobotHitbox;
     Rigidbody2D m_RigidBody;
     SpriteRenderer[] m_SpriteRenderers;
     public AudioSource AudioSource {  get; private set; }
@@ -21,6 +24,8 @@ public class Brobot : MonoBehaviour
     public bool HasCrossed { get; private set; }
 
     public bool HasMissed { get; private set; } = false;
+    //public const float k_ColliderXOffset = .9f;
+
 
     public static AudioSource backgroundMusic;
 
@@ -35,7 +40,7 @@ public class Brobot : MonoBehaviour
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
-        m_BoxCollider = GetComponent<BoxCollider2D>();
+        m_BrobotHitbox = GetComponentInChildren<BrobotHitbox>().GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderers = GetComponentsInChildren<SpriteRenderer>();
         AudioSource = GetComponent<AudioSource>();
@@ -61,6 +66,7 @@ public class Brobot : MonoBehaviour
         TwentyFiveStreakSound = GameObject.Find("25ScoreStreak").GetComponent<AudioSource>();
         FiftyStreakSound = GameObject.Find("50ScoreStreak").GetComponent<AudioSource>();
         HundredStreakSound = GameObject.Find("100ScoreStreak").GetComponent<AudioSource>();
+
     }
 
     public void Init(bool direction, float speed)
@@ -69,34 +75,36 @@ public class Brobot : MonoBehaviour
         m_Displacement = new Vector3(Direction ? 1 : -1, 0, 0);
 
         if (!Direction) {
-            m_BoxCollider.offset *= new Vector2(-1, 0);
-            foreach (SpriteRenderer s in m_SpriteRenderers) {
-                s.flipX = true;
-                Vector3 spritePos = s.transform.localPosition;
-                spritePos.x = -spritePos.x;
-                s.transform.localPosition = spritePos;
-            }
+            Vector3 inverseScale = transform.localScale;
+            inverseScale.x *= -1;
+            transform.localScale = inverseScale;
         }
         SetSortingLayer(Direction ? "Brobot1" : "Brobot2");
         m_Animator.SetFloat("Offset", Random.Range(0, 1));
+        m_Animator.SetBool("WannaDap", false);
     }
 
     public void TryDap(BrobotType inputType) // The dap should succeed if we cross an other brobot (going in the opposite direction, and if the input is right)
     {
         HasMissed = false;
         List<Collider2D> overlappingColliders = new List<Collider2D>();
-        ContactFilter2D filter = new ContactFilter2D().NoFilter();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(LayerMask.GetMask("Brobot"));
+        filter.useTriggers = true;
         Debug.Log("tryna dap...");
 
-        if (m_BoxCollider.OverlapCollider(filter, overlappingColliders) == 1 && !GameManager.Instance.EasyMode) {
+        if (m_BrobotHitbox.OverlapCollider(filter, overlappingColliders) == 0) {
+            Debug.Log("no bro");
             return;
         }
 
         foreach (Collider2D box in overlappingColliders) {
-            Brobot bro = box.GetComponent<Brobot>();
-            if (bro == null || bro.HasDapped || bro.Direction == this.Direction) continue;
+            Brobot bro = box.GetComponentInParent<Brobot>();
+            if (bro == null) { Debug.Log("bro component not found"); continue; }
+            if (bro.HasDapped) { Debug.Log("bro has already dapped"); continue; }
+            if (bro.Direction == this.Direction) { Debug.Log("bro going in same direction"); continue; }
 
-            if (inputType == bro.Type) {
+            if (inputType == bro.Type) { // DAP
                 HasDapped = true;
                 bro.AudioSource.Play();
                 BrobotEvents.SuccessfulDap?.Invoke(bro);
@@ -117,6 +125,12 @@ public class Brobot : MonoBehaviour
         }
     }
 
+    public IEnumerator ActivateWannaDap(bool activate, float time)
+    {
+        yield return new WaitForSeconds(time);
+        m_Animator.SetBool("WannaDap", activate);
+    }
+
     private void SetSortingLayer(string LayerName)
     {
         foreach (SpriteRenderer s in m_SpriteRenderers) {
@@ -126,16 +140,21 @@ public class Brobot : MonoBehaviour
 
     public void SetPlayer(bool isPlayer)
     {
+        m_Animator.SetTrigger("DapTrigger");
+        m_Animator.SetBool("WannaDap", false);
         if (isPlayer) {
             SetSortingLayer("BrobotPlayer");
+            m_BrobotHitbox.isTrigger = false;
         }
         else {
             SetSortingLayer(Direction ? "Brobot1" : "Brobot2");
+            m_BrobotHitbox.isTrigger = true;
         }
     }
 
     public void MissDap()
     {
+        m_Animator.SetTrigger("NoDapTrigger");
         if (GameManager.Instance.State == GameState.Playing)
         {
             MissCount++;
@@ -149,10 +168,8 @@ public class Brobot : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D otherCollider) // When I leave an other Brobot
+    public void LeaveOtherBrobot(Brobot otherBrobot) // When I leave an other Brobot
     {
-        Brobot otherBrobot = otherCollider.GetComponent<Brobot>();
-        if (otherBrobot == null) return;
         if (otherBrobot.Direction == this.Direction) return; // I just passed someone, whatever
         if (GameManager.Instance.PlayerBrobot == otherBrobot) HasCrossed = true; // Hey that was the player ! I crossed him !
         if (HasCrossed && !HasDapped && !HasMissed && !otherBrobot.HasMissed) { // But if we didn't dap
@@ -163,8 +180,20 @@ public class Brobot : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (Type == BrobotType.Yellow) m_Animator.Play("Walking");
 
         m_RigidBody.velocity = m_Displacement * GameManager.Instance.Speed;
+
+        //float offset = Direction ? 1 : -1;
+        //Vector3 raypos = transform.position;
+        //raypos.y += offset * 2;
+        //RaycastHit2D inFront = Physics2D.Raycast(raypos, new Vector3(offset, 0, 0), 10);
+        //if (inFront.collider == null) {
+        //    m_Animator.SetBool("WannaDap", false);
+        //    return;
+        //}
+        //if (inFront.collider.GetComponent<Brobot>() != null) {
+        //    Debug.Log("ouiiii");
+        //    m_Animator.SetBool("WannaDap", true);
+        //} else { m_Animator.SetBool("WannaDap", false); }
     }
 }

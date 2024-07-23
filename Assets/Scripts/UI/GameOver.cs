@@ -84,7 +84,6 @@ public class GameOver : MonoBehaviour
 
         // Reset the player score and miss count to 0
         GameManager.Instance.Score = 0;
-        GameManager.Instance.MissCount = 0;
     }
 
     public void PressQuitButton()
@@ -95,6 +94,5 @@ public class GameOver : MonoBehaviour
 
         // Reset the player score and miss count to 0
         GameManager.Instance.Score = 0;
-        GameManager.Instance.MissCount = 0;
     }
 }

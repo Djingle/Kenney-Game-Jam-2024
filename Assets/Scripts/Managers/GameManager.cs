@@ -1,9 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Unity.VisualScripting;
-
 public class GameManager : MonoBehaviour
 {
     // The GameManager singleton instance : the GameManager Script can be accessed anywhere with : GameManager.Instance
@@ -12,7 +8,6 @@ public class GameManager : MonoBehaviour
     public GameState State { get; private set; }
     public Brobot PlayerBrobot { get; private set; }
     public bool EasyMode { get; set; } = false;
-    public int MissCount { get; set; } = 0;
     public int Score { get; set; } = 0;
     public float Speed { get; set; } = 5;
     public GameObject m_MainMenuPrefab;
@@ -82,6 +77,7 @@ public class GameManager : MonoBehaviour
                 if (MainMenu.Instance != null) MainMenu.Instance.gameObject.SetActive(true);
                 if (CreditsMenu.Instance != null) CreditsMenu.Instance.gameObject.SetActive(false);
                 if (GameCanvas.Instance != null) GameCanvas.Instance.gameObject.SetActive(false);
+
                 if (!m_SpawnCoroutineRunning) {
                     StartCoroutine(SpawnBot(2));
                     m_SpawnCoroutineRunning = true;

@@ -20,18 +20,16 @@ public class Exterminator : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D otherCollider)
     {
-        Brobot brobot = otherCollider.GetComponent<Brobot>();
+        Brobot brobot = otherCollider.GetComponentInParent<Brobot>();
         if (brobot == null) return;
         else if (GameManager.Instance.State == GameState.Playing && brobot.HasCrossed) Destroy(brobot.gameObject);
         else Destroy(brobot.gameObject);
-        Debug.Log("destroyed");
     }
 
     private void OnTriggerEnter2D(Collider2D otherCollider)
     {
-        Debug.Log("Entree");
-        new WaitForSeconds(.5f);
-        Brobot brobot = otherCollider.GetComponent<Brobot>();
+        Brobot brobot = otherCollider.GetComponentInParent<Brobot>();
+
         if (brobot == null || brobot == GameManager.Instance.PlayerBrobot || !GameManager.Instance.EasyMode) return;
 
         string toSay = "";
@@ -56,8 +54,8 @@ public class Exterminator : MonoBehaviour
         }
         if (m_TutorialLinesSaid == 0) toSay += "\nwhen we cross !";
         if (m_TutorialLinesSaid == 1) toSay += "!";
-        if (m_TutorialLinesSaid < 2) StartCoroutine(WaitAndSay(brobot, toSay, 1.5f));
-        else StartCoroutine(WaitAndSay(brobot, toSay, 0.3f));
+        if (m_TutorialLinesSaid < 2) StartCoroutine(WaitAndSay(brobot, toSay, 2f));
+        else StartCoroutine(WaitAndSay(brobot, toSay, 0.8f));
         m_TutorialLinesSaid++;
     }
 
